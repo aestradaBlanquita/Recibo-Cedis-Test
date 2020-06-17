@@ -69,6 +69,7 @@ namespace Recibo_Cedis_Test
             mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
             mainList.ChoiceMode = ChoiceMode.Multiple;
 
+
             /* 
             mainList.ItemClick += (s, e) => {
                 var t = infoArray[e.Position];
