@@ -20,6 +20,8 @@ namespace Recibo_Cedis_Test
     public class Activity3 : Activity
     {
         List<string> detalles = new List<string>();
+        List<string> docEntryList = new List<string>();
+        List<string> docNumList = new List<string>();
         ListView mainList;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -29,12 +31,28 @@ namespace Recibo_Cedis_Test
 
             mainList = (ListView)FindViewById<ListView>(Resource.Id.listViewDetalles);
 
-            string docEntryData = Intent.GetStringExtra("DocEntryValue");
+            var pendienteSelected = this.Intent.GetStringArrayExtra("Pendientes");
+            string[] words;
+            int sizeofPendidentes = pendienteSelected.Length;
+            string docEntryValues = "";
+            for (int j = 0; j < sizeofPendidentes; j++)
+            {
+                string infoPendientes = pendienteSelected[j];
+                words = infoPendientes.Split(" ");
 
-            getPendientesDetailData(docEntryData);
+                docEntryValues = words.Last();
+                docNumList.Add(words[2]);
+                docEntryList.Add(docEntryValues); 
+                
+            }
 
-            string[] authorsList = docEntryData.Split(" ");
+            string[] dentry = docEntryList.ToArray();
+            string[] docnum = docNumList.ToArray();
 
+            int sizeOfDocEntry = dentry.Length;
+            int sizeOfDocNum = docnum.Length;
+
+/*
             string[] tempClear = authorsList.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             Console.WriteLine("AQUIIIIIIIII");
 
@@ -77,7 +95,7 @@ namespace Recibo_Cedis_Test
 
             string[] infoArray = detalles.ToArray(); // array with all the pendientes already structured
             //mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
-            mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);
+            mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);*/
 
         }
 

@@ -3,6 +3,7 @@ using Android.Content;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
+using Java.Lang;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.Json;
@@ -46,13 +47,14 @@ namespace Recibo_Cedis_Test
             for (int i = 0; i < size; i++)
             {
                 string place = i.ToString();
+                
                 string date = dobj[place]["Date"];
                 string docNum = dobj[place]["docNum"];
                 string proveedorData = dobj[place]["proveedor"];
                 string almacen = "3011";
                 string docentry = dobj[place]["dentry"];
 
-                string completedInfo = date + " Docnum: " + docNum + " " + "\n" + proveedorData + "\n" + "Almacen: " + almacen + "  " + "DocEntry: " + docentry + "  ";
+                string completedInfo = date + " Docnum: " + docNum + " " + "\n" + proveedorData + "\n" + "Almacen: " + almacen + "  " + "DocEntry: " + docentry;
  
                 try
                 {
@@ -64,20 +66,14 @@ namespace Recibo_Cedis_Test
                 }
             }
 
+
+            var doneButton = FindViewById<Button>(Resource.Id.buttonBuscar);
+            doneButton.Click += doneButton_Click;
+
             string[] infoArray = detalles.ToArray(); // array with all the pendientes already structured
             mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
             mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
             mainList.ChoiceMode = ChoiceMode.Multiple;
-
-
-            /* 
-            mainList.ItemClick += (s, e) => {
-                var t = infoArray[e.Position];
-               // Android.Widget.Toast.MakeText(this, t, Android.Widget.ToastLength.Long).Show();
-                var intent = new Intent(this, typeof(Activity3));
-                intent.PutExtra("DocEntryValue", t);
-                StartActivity(intent);
-            };*/
         }
 
         private string getSizeJsonPendientesa()
@@ -97,6 +93,38 @@ namespace Recibo_Cedis_Test
             string completeUrl = "http://192.168.102.79/WebService/recibosCedis.php?proveedor=" + proveedor;
             WebClient client = new WebClient();
             string pageRequest = client.DownloadString(completeUrl);
+        }
+
+        void doneButton_Click(object sender, EventArgs e)
+        {
+            var builder = new System.Text.StringBuilder();
+            var sparseArray = FindViewById<ListView>(Resource.Id.listView1).CheckedItemPositions;
+            List<string> pendientesList = new List<string>();
+
+            List<string> pendientesMandar = new List<string>();
+
+            string[] infoArray = detalles.ToArray();
+            for (int i = 0; i < sparseArray.Size(); i++)
+            {
+                string keysItem = sparseArray.KeyAt(i).ToString();
+                pendientesList.Add(keysItem);
+            }
+            string[] infoArrayPendientes = pendientesList.ToArray();
+
+            int sizeArray = infoArrayPendientes.Length;
+
+            for (int j = 0; j < sizeArray; j++)
+            {
+                int place = Int32.Parse(infoArrayPendientes[j]);
+                string info = infoArray[place];
+                pendientesMandar.Add(info);
+            }
+
+            string[] infoMandar = pendientesMandar.ToArray();
+
+            var intent = new Intent(this, typeof(Activity3));
+            intent.PutExtra("Pendientes", infoMandar);
+            StartActivity(intent);
         }
     }
 }
