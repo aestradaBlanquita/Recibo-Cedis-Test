@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Text;
 using Android.Util;
 using Android.Widget;
 using Java.Lang;
@@ -25,6 +26,8 @@ namespace Recibo_Cedis_Test
     {
         List<string> detalles = new List<string>();
         ListView mainList;
+        EditText searchbox;
+        private ArrayAdapter<string> _adapter;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -72,8 +75,23 @@ namespace Recibo_Cedis_Test
 
             string[] infoArray = detalles.ToArray(); // array with all the pendientes already structured
             mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
+
             mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
+
+            _adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
+
             mainList.ChoiceMode = ChoiceMode.Multiple;
+
+
+            try
+            {
+                searchbox.TextChanged += InputSearchOnTextChanged;
+            }
+            catch (System.Exception)
+            {
+
+                Console.WriteLine("NI PEDO");
+            }
         }
 
         private string getSizeJsonPendientesa()
@@ -125,6 +143,11 @@ namespace Recibo_Cedis_Test
             var intent = new Intent(this, typeof(Activity3));
             intent.PutExtra("Pendientes", infoMandar);
             StartActivity(intent);
+        }
+
+        private void InputSearchOnTextChanged(object sender, TextChangedEventArgs args)
+        {
+            _adapter.Filter.InvokeFilter(searchbox.Text);
         }
     }
 }

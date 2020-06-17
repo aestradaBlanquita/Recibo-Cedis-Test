@@ -52,50 +52,46 @@ namespace Recibo_Cedis_Test
             int sizeOfDocEntry = dentry.Length;
             int sizeOfDocNum = docnum.Length;
 
-/*
-            string[] tempClear = authorsList.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-            Console.WriteLine("AQUIIIIIIIII");
-
-            string DOCNUMER = tempClear[2];
-
-            string docEntry = tempClear.Last();
-
-            WebClient client = new WebClient();
-            string strPageCode = client.DownloadString("http://192.168.102.79/WebService/jsonFiles/pendientesDetail.json");
-
-            dynamic dobj = JsonConvert.DeserializeObject<dynamic>(strPageCode);
-
-            string sizeObject = getSizeJsonPendientesDetalles();
-
-            int size = Int16.Parse(sizeObject);
-
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < sizeOfDocNum; i++)
             {
-                string place = i.ToString();
-                string code = dobj[place]["code"];
-                string desc = dobj[place]["desc"];
-                string qty = dobj[place]["qty"];
-                string umo = dobj[place]["umoCode"];
-                string almacen = dobj[place]["bodega"];
-                string referencia = dobj[place]["ref"];
-                string docNum = DOCNUMER;
-               // string docNum = dobj[place]["ref"];
+                getPendientesDetailData(dentry[i]);
 
-                string completedInfo = "(" + place + ") " + code + " "+ desc + "\n" + "Cant: " + qty + " " + umo + " Alm: " + almacen + " Ref: " + referencia + " Ent= " + docNum; 
+                WebClient client = new WebClient();
+                string strPageCode = client.DownloadString("http://192.168.102.79/WebService/jsonFiles/pendientesDetail.json");
 
-                try
+                dynamic dobj = JsonConvert.DeserializeObject<dynamic>(strPageCode);
+
+                string sizeObject = getSizeJsonPendientesDetalles();
+
+                int size = Int16.Parse(sizeObject);
+
+                for (int j = 0; j < size; j++)
                 {
-                    detalles.Add(completedInfo);
-                }
-                catch (NullReferenceException e)
-                {
-                    Console.WriteLine("ERROR: PLACE - " + place);
+                    string place = j.ToString();
+                    string code = dobj[place]["code"];
+                    string desc = dobj[place]["desc"];
+                    string qty = dobj[place]["qty"];
+                    string umo = dobj[place]["umoCode"];
+                    string almacen = dobj[place]["bodega"];
+                    string referencia = dobj[place]["ref"];
+                    string docNum = docnum[i];
+
+                    string completedInfo = "(" + place + ") " + code + " " + desc + "\n" + "Cant: " + qty + " " + umo + " Alm: " + almacen + " Ref: " + referencia + " Ent= " + docNum;
+
+                    try
+                    {
+                        detalles.Add(completedInfo);
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        Console.WriteLine("ERROR: PLACE - " + place);
+                    }
                 }
             }
 
             string[] infoArray = detalles.ToArray(); // array with all the pendientes already structured
             //mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
-            mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);*/
+            mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);
 
         }
 
