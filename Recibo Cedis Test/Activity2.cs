@@ -26,8 +26,10 @@ namespace Recibo_Cedis_Test
     {
         List<string> detalles = new List<string>();
         ListView mainList;
-        EditText searchbox;
-        private ArrayAdapter<string> _adapter;
+        private ArrayAdapter adp1;
+        private SearchView sv1;
+        private ListView lv1;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -73,25 +75,25 @@ namespace Recibo_Cedis_Test
             var doneButton = FindViewById<Button>(Resource.Id.buttonBuscar);
             doneButton.Click += doneButton_Click;
 
+            sv1 = FindViewById<SearchView>(Resource.Id.svw1);
+            lv1 = FindViewById<ListView>(Resource.Id.listView1);
+
             string[] infoArray = detalles.ToArray(); // array with all the pendientes already structured
+
+            /*
             mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
 
             mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
 
-            _adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
+            mainList.ChoiceMode = ChoiceMode.Multiple; */
 
-            mainList.ChoiceMode = ChoiceMode.Multiple;
+            adp1 = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItemChecked, infoArray);
+            lv1.Adapter = adp1;
 
+            lv1.ChoiceMode = ChoiceMode.Multiple;
 
-            try
-            {
-                searchbox.TextChanged += InputSearchOnTextChanged;
-            }
-            catch (System.Exception)
-            {
+            sv1.QueryTextChange += Sv1_QueryTextChange;
 
-                Console.WriteLine("NI PEDO");
-            }
         }
 
         private string getSizeJsonPendientesa()
@@ -145,9 +147,9 @@ namespace Recibo_Cedis_Test
             StartActivity(intent);
         }
 
-        private void InputSearchOnTextChanged(object sender, TextChangedEventArgs args)
+        private void Sv1_QueryTextChange(object sender, SearchView.QueryTextChangeEventArgs e)
         {
-            _adapter.Filter.InvokeFilter(searchbox.Text);
+            adp1.Filter.InvokeFilter(e.NewText);
         }
     }
 }

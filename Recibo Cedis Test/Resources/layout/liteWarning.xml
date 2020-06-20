@@ -1,3 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cantidad Recibida"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#fff"
+        />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ingrese la cantidad recibida del producto"
+        android:textColor="#81D9E3" />
+
+    <TextView
+        android:id="@+id/textViewProducto"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre del producto"
+        android:textColor="#db1f35" />
+
+	<EditText
+		android:layout_width="50sp"
+		android:layout_height="wrap_content"
+		android:id="@+id/editTextInputRecibida"
+		android:background="#ffff"
+		android:layout_marginRight="0.0dp"
+        android:gravity="center_horizontal"
+        
+        />
+	<Button
+		android:text="Guardar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/buttonGuardar" />
+    
 </LinearLayout>

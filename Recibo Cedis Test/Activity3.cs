@@ -13,6 +13,7 @@ using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 using Newtonsoft.Json;
+using static Android.Widget.AdapterView;
 
 namespace Recibo_Cedis_Test
 {
@@ -23,6 +24,12 @@ namespace Recibo_Cedis_Test
         List<string> docEntryList = new List<string>();
         List<string> docNumList = new List<string>();
         ListView mainList;
+
+        private ArrayAdapter adp2;
+        private SearchView sv2;
+        private ListView lv2;
+
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,6 +37,10 @@ namespace Recibo_Cedis_Test
             SetContentView(Resource.Layout.detalles_Layout);
 
             mainList = (ListView)FindViewById<ListView>(Resource.Id.listViewDetalles);
+
+
+            sv2 = FindViewById<SearchView>(Resource.Id.svw2);
+            lv2 = FindViewById<ListView>(Resource.Id.listViewDetalles);
 
             var pendienteSelected = this.Intent.GetStringArrayExtra("Pendientes");
             string[] words;
@@ -90,8 +101,29 @@ namespace Recibo_Cedis_Test
             }
 
             string[] infoArray = detalles.ToArray(); // array with all the pendientes already structured
-            //mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
-            mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);
+                                                     //mainList = (ListView)FindViewById<ListView>(Resource.Id.listView1);
+                                                     //mainList.Adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);
+
+            adp2 = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, infoArray);
+            lv2.Adapter = adp2;
+
+            /*   lv2.ItemClick += (s, e) => {
+
+                   Dialog dialog = new Dialog(this);
+                   dialog.SetContentView(Resource.Layout.liteWarning);
+                   TextView dialogText = (TextView)dialog.FindViewById(Resource.Id.textViewProducto);
+
+                   var position = e.Position;
+
+                   dialogText.Text = ;
+                   //alert.Create().Show();
+                   dialog.Show();
+
+               };*/
+
+            lv2.ItemClick += mylistClick_ItemClick;
+
+            sv2.QueryTextChange += Sv2_QueryTextChange;
 
         }
 
@@ -112,6 +144,38 @@ namespace Recibo_Cedis_Test
             string completeUrl = "http://192.168.102.79/WebService/recibosCedisDetail.php?proveedorDocEntry=" + docEntry;
             WebClient client = new WebClient();
             string pageRequest = client.DownloadString(completeUrl);
+        }
+
+        private void Sv2_QueryTextChange(object sender, SearchView.QueryTextChangeEventArgs e)
+        {
+            adp2.Filter.InvokeFilter(e.NewText);
+        }
+
+        void mylistClick_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            string valueList = detalles[e.Position];
+
+            string fixedString = valueList.Substring(0, valueList.LastIndexOf("Cant:"));
+
+            string[] tempString = fixedString.Split(' ');
+
+            string product = tempString.Last();
+
+            Dialog dialog = new Dialog(this);
+            dialog.SetContentView(Resource.Layout.liteWarning);
+            TextView dialogText = (TextView)dialog.FindViewById(Resource.Id.textViewProducto);
+            EditText cantInput = (EditText)dialog.FindViewById(Resource.Id.editTextInputRecibida);
+            Button textInput = (Button)dialog.FindViewById(Resource.Id.buttonGuardar);
+
+            dialogText.Text = product;
+
+            //alert.Create().Show();
+            dialog.Show();
+
+            textInput.Click += (object sender, EventArgs e) =>
+            {
+                Console.WriteLine("TACOS");
+            };
         }
     }
 }
